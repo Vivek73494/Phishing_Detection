@@ -7,6 +7,7 @@ import UrlComponents from './components/UrlComponents';
 import NetworkMetadata from './components/NetworkMetadata';
 import FeatureInspection from './components/FeatureInspection';
 import Footer from './components/Footer';
+import { API_BASE_URL } from './apiConfig';
 
 export default function App() {
   const [modelOnline, setModelOnline] = useState(true);
@@ -21,7 +22,7 @@ export default function App() {
 
   // Health check on mount
   useEffect(() => {
-    fetch('/api/health')
+    fetch(`${API_BASE_URL}/api/health`)
       .then((res) => res.json())
       .then((data) => {
         if (data && data.status === 'online' && data.model_loaded) {
@@ -54,7 +55,7 @@ export default function App() {
     }, 450);
 
     try {
-      const response = await fetch('/api/predict', {
+      const response = await fetch(`${API_BASE_URL}/api/predict`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

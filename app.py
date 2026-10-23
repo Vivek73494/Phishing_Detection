@@ -37,10 +37,25 @@ else:
     app = Flask(__name__)
 
 
+# Allowed Origins for CORS (local development + deployed Vercel frontends)
+ALLOWED_ORIGINS = {
+    "https://phishing-detection-swart.vercel.app",
+    "https://phishing-detection-i6q6aiwsj-vivek-c335.vercel.app",
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "http://127.0.0.1:5000",
+    "http://localhost:5000",
+}
+
+
 @app.after_request
 def add_cors_headers(response):
-    """Enable CORS for React frontend development server."""
-    response.headers["Access-Control-Allow-Origin"] = "*"
+    """Enable CORS for React frontend development server and Vercel deployments."""
+    origin = request.headers.get("Origin")
+    if origin and (origin in ALLOWED_ORIGINS or origin.endswith(".vercel.app")):
+        response.headers["Access-Control-Allow-Origin"] = origin
+    else:
+        response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
     return response
